@@ -1,7 +1,7 @@
 pipeline {
   agent any
   tools {
-      maven 'M2_HOME'
+      maven 'Maven 3.6.3'
       jdk 'jdk8'
   }
 
@@ -15,13 +15,13 @@ pipeline {
 
     stage("Build") {
       steps {
-        sh "${M2_HOME}" package"
+        sh "${M2_HOME} clean install"
       }
     }
 
     stage("Unit Test") {
       steps {
-        sh '${M2_HOME}" test'
+        sh "${M2_HOME} test"
       }
 
       post {
