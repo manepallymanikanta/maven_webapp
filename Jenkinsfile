@@ -2,8 +2,25 @@ node {
   stage('checkout') {
     git 'https://github.com/manepallymanikanta/maven_webapp.git'
   }
+
   stage('Compile-package') {
     def mvnHome = tool name: 'Mavan', type: 'maven'
     sh "${mvnHome}/bin/mvn package"
   }
+
+  stage('SonarQube Analysis') {
+    def mvnHome = tool name: 'Mavan', type: 'maven'
+    withSonarQubeEnv('sonar') {
+      sh "${mvnHome}/bin/mvn clean package sonar:sonar"
+    }
+  }
+
+  stage("Quality Gate"){
+          timeout(time: 1, unit: 'HOURS') {
+              def qg = waitForQualityGate()
+              if (qg.status != 'OK') {
+                  error "Pipeline aborted due to quality gate failure: ${qg.status}"
+              }
+          }
+      }
 }
