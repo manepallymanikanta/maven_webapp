@@ -14,13 +14,13 @@ pipeline {
 
     stage("Build") {
       steps {
-        sh "${M2_HOME} clean install"
+        sh "${M2_HOME}/bin/mvn clean install"
       }
     }
 
     stage("Unit Test") {
       steps {
-        sh "${M2_HOME} test"
+        sh "${M2_HOME}/bin/mvn test"
       }
 
       post {
