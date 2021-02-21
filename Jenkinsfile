@@ -1,32 +1,27 @@
 pipeline {
   agent any
+  tools {
+      maven 'Maven 3.6.3'
+      jdk 'jdk8'
+  }
 
   stages {
 
     stage("checkout") {
       steps {
-        script {
-          def mvnHome = tool name: 'Mavan', type: 'maven'
-          checkout scm
-        }
+        checkout scm
       }
     }
 
     stage("Build") {
       steps {
-        script {
-          def mvnHome = tool name: 'Mavan', type: 'maven'
-          sh "${mvnHome}/bin/mvn clean compile"
-        }
+        sh "${M2_HOME}"/bin/mvn clean compile"
       }
     }
 
     stage("Unit Test") {
       steps {
-        scrip{
-          def mvnHome = tool name: 'Mavan', type: 'maven'
-          sh '${mvnHome}/bin/mvn test'
-        }
+        sh '${M2_HOME}"/bin/mvn test'
       }
 
       post {
