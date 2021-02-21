@@ -15,13 +15,13 @@ pipeline {
 
     stage("Build") {
       steps {
-        sh "${M2_HOME}"/bin/mvn clean compile"
+        sh "${M2_HOME}" clean compile"
       }
     }
 
     stage("Unit Test") {
       steps {
-        sh '${M2_HOME}"/bin/mvn test'
+        sh '${M2_HOME}" test'
       }
 
       post {
