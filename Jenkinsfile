@@ -1,7 +1,7 @@
 pipeline {
   agent any
   tools {
-      maven 'Maven'
+      maven 'M2_HOME'
       jdk 'jdk8'
   }
 
