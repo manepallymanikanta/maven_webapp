@@ -1,26 +1,32 @@
-node {
-  stage('checkout') {
-    git 'https://github.com/manepallymanikanta/maven_webapp.git'
-  }
+pipeline {
+  agent any
 
-  stage('Compile-package') {
-    def mvnHome = tool name: 'Mavan', type: 'maven'
-    sh "${mvnHome}/bin/mvn package"
-  }
+  stages {
 
-  stage('SonarQube Analysis') {
-    def mvnHome = tool name: 'Mavan', type: 'maven'
-    withSonarQubeEnv('sonar') {
-      sh "${mvnHome}/bin/mvn clean package sonar:sonar"
-    }
-  }
-
-  stage("Quality Gate"){
-          timeout(time: 1, unit: 'HOURS') {
-              def qg = waitForQualityGate()
-              if (qg.status != 'OK') {
-                  error "Pipeline aborted due to quality gate failure: ${qg.status}"
-              }
-          }
+    stage("checkout") {
+      steps {
+        checkout scm
       }
+    }
+
+    stage("Build") {
+      steps {
+        def mvnHome = tool name: 'Mavan', type: 'maven'
+        sh "${mvnHome}/bin/mvn clean compile"
+      }
+    }
+
+    stage("Unit Test") {
+      steps {
+        sh '${mvnHome}/bin/mvn test'
+      }
+
+      post {
+        always {
+          junit '**/target/surefire-reports/TEST-*.xml'
+        }
+      }
+    }
+
+  }
 }
