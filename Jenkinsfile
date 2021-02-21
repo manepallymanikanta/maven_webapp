@@ -15,7 +15,7 @@ pipeline {
 
     stage("Build") {
       steps {
-        sh "${M2_HOME}" compile"
+        sh "${M2_HOME}" package"
       }
     }
 
